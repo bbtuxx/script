@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Проверка наличия репозитория Backports и его добавление
+if ! grep -q "backports" /etc/apt/sources.list; then
+    echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc)-backports main restricted universe multiverse" >> /etc/apt/sources.list
+fi
+
+# Обновление пакетного менеджера
+apt update
+apt upgrade -y
+
+# Установка и запуск Apache2
+apt install apache2 -y
+systemctl start apache2
+systemctl enable apache2
+
+# Установка Python
+apt install python3 -y
+
+# Установка и поднятие SSH-сервера
+apt install openssh-server -y
+systemctl start ssh
+systemctl enable ssh
+
+# Установка MySQL
+apt install mysql-server -y
+systemctl start mysql
+systemctl enable mysql
+
+# Установка инструментов для разработки git
+apt install git -y
+
+# Установка и настройка файрволла UFW
+apt install ufw -y
+ufw allow OpenSSH
+ufw allow "Apache Full"
+ufw enable
+
+# Вывод IP адреса
+echo "IP адрес, применяющего скрипт:"
+hostname -I
+
+# Создание файла description.txt
+echo "Скрипт для автоматической настройки системы. Действия:
+1. Проверка и добавление репозитория Backports
+2. Обновление пакетного менеджера
+3. Установка и запуск Apache2
+4. Установка Python3
+5. Установка и поднятие SSH-сервера
+6. Установка MySQL и запуск сервиса
+7. Установка инструментов для разработки git
+8. Установка и настройка файрволла UFW
+9. Вывод IP адреса применяющего скрипт
+" > description.txt
+
+echo "Настройка завершена."
